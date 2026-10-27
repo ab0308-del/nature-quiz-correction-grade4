@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>訂正站 · 四年級自然科期中模擬卷</title>
+<style>
+:root{--bg:#f0f4ff;--card:#fff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif;background:var(--bg);min-height:100vh;padding-bottom:90px;}
+.hdr{background:linear-gradient(135deg,#1e3a8a,#7c3aed);color:white;padding:18px 16px 14px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);}
+.hdr h1{font-size:1.05rem;font-weight:800;}
+.hdr p{font-size:.78rem;opacity:.85;margin-top:2px;}
+.name-row{display:flex;gap:8px;margin-top:10px;justify-content:center;align-items:center;}
+.name-row input{border:none;border-radius:8px;padding:6px 12px;font-size:.9rem;font-family:inherit;width:140px;outline:none;}
+.name-row label{font-size:.82rem;opacity:.9;}
+.prog-wrap{max-width:680px;margin:10px auto 0;padding:0 16px;}
+.prog-bar{background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#16a34a,#22d3ee);transition:width .5s ease;width:0%;}
+.prog-label{font-size:.75rem;color:#64748b;text-align:right;margin-top:3px;}
+.container{max-width:680px;margin:0 auto;padding:14px 12px 0;}
+.sec-block{background:var(--card);border-radius:14px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.10);overflow:hidden;}
+.sec-hdr{padding:12px 16px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:.95rem;color:white;}
+.sec-badge{background:rgba(255,255,255,.22);border-radius:99px;padding:2px 9px;font-size:.75rem;font-weight:700;}
+.bubble-grid{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;}
+.bubble{width:52px;height:52px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border:none;font-family:inherit;transition:transform .15s,box-shadow .15s;font-weight:800;font-size:1rem;position:relative;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.bubble:hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(0,0,0,.22);}
+.s-default{background:#e2e8f0;color:#475569;}
+.s-seen{background:#94a3b8;color:#fff;}
+.s-ok{background:#16a34a;color:#fff;}
+.s-partial{background:#f59e0b;color:#fff;}
+.s-no{background:#dc2626;color:#fff;}
+.status-icon{font-size:.7rem;position:absolute;bottom:2px;right:4px;line-height:1;}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:500;padding:12px;}
+.overlay.show{display:flex;}
+.modal{background:white;border-radius:20px;max-width:540px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.modal-hdr{padding:16px 18px 12px;position:sticky;top:0;background:white;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px;}
+.modal-tag{border-radius:8px;padding:4px 10px;font-size:.78rem;font-weight:700;color:white;}
+.modal-num{font-size:1.5rem;font-weight:900;}
+.close-btn{margin-left:auto;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#94a3b8;line-height:1;padding:0 4px;}
+.modal-body{padding:16px 18px 20px;}
+.q-box{background:#f8fafc;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.93rem;line-height:1.7;color:#334155;border-left:4px solid #e2e8f0;}
+.article-box{background:#fef9c3;border:1.5px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.87rem;line-height:1.75;color:#78350f;}
+.article-title{display:block;margin-bottom:5px;font-size:.8rem;color:#92400e;font-weight:700;}
+.ans-row{background:#dcfce7;border:2px solid #86efac;border-radius:12px;padding:14px 16px;margin-bottom:14px;text-align:center;}
+.ans-label{font-size:.72rem;font-weight:700;color:#15803d;letter-spacing:.05em;margin-bottom:4px;}
+.ans-value{font-size:1.25rem;font-weight:900;color:#166534;}
+.exp-box{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:.88rem;line-height:1.75;color:#1e3a8a;}
+.exp-title{font-size:.72rem;color:#1d4ed8;display:block;margin-bottom:4px;font-weight:700;}
+.page-chip{display:inline-flex;align-items:center;gap:5px;background:#fef9c3;border:1px solid #fcd34d;border-radius:99px;padding:4px 11px;font-size:.78rem;color:#92400e;margin-bottom:18px;}
+.status-label{font-size:.8rem;font-weight:700;color:#64748b;text-align:center;margin-bottom:8px;}
+.status-btns{display:flex;gap:8px;}
+.sbtn{flex:1;padding:12px 6px;border-radius:12px;border:2px solid transparent;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.sbtn .icon{font-size:1.4rem;}
+.sbtn.ok{background:#dcfce7;color:#15803d;border-color:#86efac;}
+.sbtn.partial{background:#fef3c7;color:#92400e;border-color:#fcd34d;}
+.sbtn.no{background:#fee2e2;color:#991b1b;border-color:#fca5a5;}
+.sbtn:hover{transform:scale(1.04);}
+.sbtn.sel-ok{background:#16a34a!important;color:white!important;border-color:#16a34a!important;}
+.sbtn.sel-partial{background:#f59e0b!important;color:white!important;border-color:#f59e0b!important;}
+.sbtn.sel-no{background:#dc2626!important;color:white!important;border-color:#dc2626!important;}
+.export-btn{position:fixed;bottom:18px;right:18px;z-index:200;background:linear-gradient(135deg,#1e3a8a,#7c3aed);color:white;border:none;border-radius:99px;padding:12px 22px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(124,58,237,.5);display:flex;align-items:center;gap:7px;}
+.export-btn:hover{transform:scale(1.05);}
+#snapshot{display:none;padding:24px;background:white;border-radius:16px;max-width:580px;margin:16px auto;}
+#snapshot h2{font-size:1rem;color:#1e3a8a;font-weight:800;text-align:center;margin-bottom:4px;}
+.snap-meta{font-size:.8rem;color:#64748b;text-align:center;margin-bottom:16px;}
+.snap-sec{margin-bottom:14px;}
+.snap-sec-title{font-size:.8rem;font-weight:700;margin-bottom:6px;}
+.snap-bubbles{display:flex;flex-wrap:wrap;gap:5px;}
+.snap-bbl{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;}
+.sn-default{background:#e2e8f0;color:#64748b;}
+.sn-seen{background:#cbd5e1;color:#475569;}
+.sn-ok{background:#16a34a;color:white;}
+.sn-partial{background:#f59e0b;color:white;}
+.sn-no{background:#dc2626;color:white;}
+.snap-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:.75rem;margin-top:10px;color:#475569;}
+.snap-legend span{display:flex;align-items:center;gap:4px;}
+.snap-dot{width:12px;height:12px;border-radius:50%;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🎯 訂正站 · 四年級上學期自然科期中模擬卷</h1>
+  <p>範圍：第一單元 地表的靜與動、第二單元 水生生物與環境</p>
+  <div class="name-row">
+    <label>學生姓名：</label>
+    <input type="text" id="studentName" placeholder="請輸入姓名">
+  </div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-label" id="progLabel">已標記 0 / 38 題</div>
+</div>
+
+<div class="container" id="mainGrid"></div>
+
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-tag" id="modalTag"></span>
+      <span class="modal-num" id="modalNum"></span>
+      <button class="close-btn" onclick="closeOverlay()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="articleSection" style="display:none">
+        <div class="article-box"><strong class="article-title">📄 閱讀短文</strong><span id="articleText"></span></div>
+      </div>
+      <div class="q-box" id="modalQ"></div>
+      <div class="ans-row">
+        <div class="ans-label">✅ 正確答案</div>
+        <div class="ans-value" id="modalAns"></div>
+      </div>
+      <div class="exp-box"><strong class="exp-title">📖 詳細解說</strong><span id="modalExp"></span></div>
+      <div><span class="page-chip">📚 翰林版四上自然 <span id="modalPage"></span></span></div>
+      <div class="status-label">這一題你現在會了嗎？</div>
+      <div class="status-btns">
+        <button class="sbtn ok" id="sOk" onclick="setStatus('ok')"><span class="icon">✅</span>已熟練</button>
+        <button class="sbtn partial" id="sPartial" onclick="setStatus('partial')"><span class="icon">⚠️</span>尚未熟練</button>
+        <button class="sbtn no" id="sNo" onclick="setStatus('no')"><span class="icon">❓</span>還是不懂</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="snapshot">
+  <h2>📝 訂正記錄表</h2>
+  <div class="snap-meta" id="snapMeta"></div>
+  <div id="snapContent"></div>
+  <div class="snap-legend">
+    <span><span class="snap-dot" style="background:#16a34a"></span>已熟練</span>
+    <span><span class="snap-dot" style="background:#f59e0b"></span>尚未熟練</span>
+    <span><span class="snap-dot" style="background:#dc2626"></span>還是不懂</span>
+    <span><span class="snap-dot" style="background:#e2e8f0"></span>未開啟</span>
+  </div>
+</div>
+
+<button class="export-btn" onclick="doExport()">📸 輸出截圖繳交</button>
+
+<script>
+var QS = [{"id": "tf_0", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 1, "q": "土壤裡有落葉、樹枝腐爛後形成的養分，可以幫助植物生長。", "ans": "○ 正確", "explain": "土壤裡含有腐植質，是動植物遺體腐爛後形成的，顏色深、摸起來鬆軟，能提供植物生長所需的養分。", "page": "p.10～11", "article": ""}, {"id": "tf_1", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 2, "q": "同樣一場大雨，坡度愈陡的地方，地表物質被沖走得愈少。", "ans": "× 錯誤", "explain": "坡度愈陡，水流得愈快，衝擊力愈大，地表物質反而被沖走得「愈多」，更容易發生土石流。", "page": "p.22～23", "article": ""}, {"id": "tf_2", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 3, "q": "土壤裡含有腐植質，腐植質顏色深、摸起來鬆軟，是動植物遺體腐爛後形成的，能提供植物生長所需的養分。", "ans": "○ 正確", "explain": "腐植質就是動植物遺體腐爛後的產物，顏色深、質地鬆軟，是讓土壤肥沃的關鍵。", "page": "p.10～11", "article": ""}, {"id": "tf_3", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 4, "q": "開採砂石、砍伐森林會讓地表變得不穩定，比較容易發生災害。", "ans": "○ 正確", "explain": "植物的根可以抓住土壤，減少侵蝕。砍伐森林、開採砂石會破壞地表的穩定性，增加土石流、山崩等災害風險。", "page": "p.28～31", "article": ""}, {"id": "tf_4", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 5, "q": "地震的震源深度愈深，就表示這次地震釋放的能量愈大。", "ans": "× 錯誤", "explain": "地震釋放的能量大小是用「規模」來衡量，和震源深度無直接關係。震源深度影響的是地表震度，不是規模。", "page": "p.36～37", "article": ""}, {"id": "tf_5", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 6, "q": "緊急避難包裡應該準備飲用水、乾糧和手電筒等用品。", "ans": "○ 正確", "explain": "地震後可能停水停電，緊急避難包應備有：飲用水、乾糧（至少3天份）、手電筒、急救包、哨子、備用電池等。", "page": "p.42～43", "article": ""}, {"id": "tf_6", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 7, "q": "生態池是人們挖出來的，所以裡面不會有任何生物生活。", "ans": "× 錯誤", "explain": "生態池雖然是人工挖掘的，但只要有水和適合的環境，很快就會有植物、昆蟲、魚蝦、青蛙等各種生物在裡面生活。", "page": "p.52～53", "article": ""}, {"id": "tf_7", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 8, "q": "大萍和布袋蓮一樣，整株漂在水面上，根泡在水裡隨著水漂動。", "ans": "○ 正確", "explain": "大萍和布袋蓮都屬於「漂浮性」水生植物，整株漂在水面，根不固定在泥土中，隨水漂動。", "page": "p.56～57", "article": ""}, {"id": "tf_8", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 9, "q": "蝌蚪在水中用鰓呼吸，長大變成青蛙後改用肺和皮膚呼吸。", "ans": "○ 正確", "explain": "蝌蚪是完全水生的，用鰓呼吸；青蛙是兩棲動物，可以在陸地活動，改用肺和潮溼的皮膚呼吸。", "page": "p.68～69", "article": ""}, {"id": "tf_9", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 10, "q": "在溪邊烤肉後把吃剩的食物倒進溪裡，可以讓魚吃得更飽。", "ans": "× 錯誤", "explain": "剩食倒入溪中會造成水質優氧化（有機物分解耗氧），讓水中生物缺氧死亡，破壞水域環境！", "page": "p.80～81", "article": ""}, {"id": "mc_0", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 1, "q": "阿寬家院子裡的土壤雨後總是積水很久，他想改善排水能力，應該加入什麼物質？", "ans": "② 粗沙或礫石", "explain": "黏土顆粒小、空隙少，排水慢；加入粗沙或礫石可增加空隙，讓水更快通過。水泥和鹽巴對植物有害。", "page": "p.12～13", "article": ""}, {"id": "mc_1", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 2, "q": "把礫石、沙、土壤分別裝進底部有洞的杯子，同時倒入一樣多的水。哪個杯子的水最快滴出來？", "ans": "① 裝礫石的", "explain": "礫石顆粒最大、空隙最大，水能最快通過。沙次之，土壤顆粒最細密，水最慢滲出。", "page": "p.12～13", "article": ""}, {"id": "mc_2", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 3, "q": "下列哪一種行為，屬於「人類活動」改變地表形貌的例子？", "ans": "③ 工人把山坡整平蓋成停車場", "explain": "河流侵蝕、颱風、地震都是大自然力量；工人整平山坡是人類刻意的建設活動。", "page": "p.28～29", "article": ""}, {"id": "mc_3", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 4, "q": "颱風過後，山坡上多了一道深深的溝。這道溝最可能是什麼造成的？", "ans": "① 雨水沖刷", "explain": "颱風帶來大量降雨，雨水沿山坡快速流動，強力沖刷地表，在坡面形成深溝（侵蝕溝）。", "page": "p.22～23", "article": ""}, {"id": "mc_4", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 5, "q": "下列哪一種動物，「不是」水生動物？", "ans": "③ 蚯蚓", "explain": "蚯蚓生活在潮溼土壤中，不是水生動物。鯉魚（魚類）、螃蟹（甲殼類）、田螺（軟體類）都是水生動物。", "page": "p.64～67", "article": ""}, {"id": "mc_5", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 6, "q": "下列哪一項「不是」人類活動造成的地表改變？", "ans": "③ 海浪拍打形成海蝕洞", "explain": "海浪是大自然力量，拍打岩石形成海蝕洞是自然侵蝕；梯田、水庫、隧道都是人類建設活動。", "page": "p.24～25", "article": ""}, {"id": "mc_6", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 7, "q": "把河邊的樹全部砍光，河岸挖得光禿禿的。下大雨時最可能發生什麼事？", "ans": "① 河岸的土容易被沖走", "explain": "植物的根能抓住土壤，砍光樹木後，土壤失去保護，下雨時很容易被雨水和流水沖走。", "page": "p.26～27", "article": ""}, {"id": "mc_7", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 8, "q": "下列哪一項是地震可能造成的「地表變動」？", "ans": "② 地面出現斷層", "explain": "地震是地殼板塊擠壓、錯動造成的，能使地表龜裂、出現斷層。打雷、下雪、濃霧是天氣現象。", "page": "p.34～35", "article": ""}, {"id": "mc_8", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 9, "q": "同一次地震，離震央愈遠的地方，通常會有什麼情形？", "ans": "② 震度愈小", "explain": "同一次地震只有一個規模（能量固定），但各地震度不同——距離震央愈遠，震度通常愈小。", "page": "p.36～37", "article": ""}, {"id": "mc_9", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 10, "q": "下列哪一樣東西「最不需要」放進緊急避難包？", "ans": "③ 厚重的百科全書", "explain": "緊急避難包要輕便實用，百科全書又重又沒有緊急求生用途。飲水、食物、照明、哨子都是必需品。", "page": "p.42～43", "article": ""}, {"id": "mc_10", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 11, "q": "在教室做地震避難演練時，如果桌子太小躲不進去，最好的做法是什麼？", "ans": "② 蹲低用書包保護頭頸", "explain": "地震搖晃時不可以跑；窗戶旁危險（玻璃可能碎裂）；無法躲進桌下時，應蹲低靠近牆壁並用書包保護頭頸部。", "page": "p.40～41", "article": ""}, {"id": "mc_11", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 12, "q": "下列哪一個地方「不是」水域環境？", "ans": "① 草原", "explain": "水域環境是以水為主的環境，包括河流、湖泊、溼地、魚塭、溝渠等。草原是陸地環境。", "page": "p.52～53", "article": ""}, {"id": "mc_12", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 13, "q": "阿寬看到一種植物，葉子平貼水面，長長的葉柄連到水底。這最可能是哪一類水生植物？", "ans": "② 浮葉性", "explain": "浮葉性水生植物：根固定水底泥土，葉片平貼水面，有長長的葉柄。如荷花、臺灣萍蓬草。", "page": "p.56～57", "article": ""}, {"id": "mc_13", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 14, "q": "香蒲的莖葉直直伸出水面；水蘊草整株沉在水中。這兩種植物最主要的不同是什麼？", "ans": "② 生長位置和適應方式不同", "explain": "香蒲是挺水性，水蘊草是沉水性，兩者都是植物，最主要差異是生長位置和對水環境的適應方式不同。", "page": "p.54～59", "article": ""}, {"id": "mc_14", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 15, "q": "小葵想觀察魚是怎麼呼吸的，應該特別注意看魚的哪個部位？", "ans": "② 口和鰓蓋", "explain": "魚用鰓呼吸，觀察時要注意口的開合（吸水進來）和鰓蓋的開合（水從鰓蓋排出）。", "page": "p.64～65", "article": ""}, {"id": "mc_15", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 16, "q": "下列哪一種水生動物用腳上的蹼游水，也能爬到陸地上活動？", "ans": "③ 龜", "explain": "龜是兩棲性動物，四肢有蹼，能在水中游泳，也能爬到陸地上。螺、蝦、文蛤都不以蹼游水。", "page": "p.68～69", "article": ""}, {"id": "mc_16", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 17, "q": "彈塗魚可以離開水面，在潮間帶的泥灘上跳來跳去。這件事說明了什麼？", "ans": "① 構造和本領跟環境有關", "explain": "彈塗魚演化出能短暫離水的特殊構造（皮膚輔助呼吸、胸鰭支撐爬行），說明生物的構造和本領與生活環境緊密相關。", "page": "p.70～71", "article": ""}, {"id": "mc_17", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 18, "q": "下列哪一種食物主要來自「水田」這種水域環境？", "ans": "② 茭白筍", "explain": "茭白筍是挺水性植物，生長在水田（淺水）環境中。高麗菜、蘋果、花生都是旱地作物。", "page": "p.78～79", "article": ""}, {"id": "mc_18", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 19, "q": "社區想整治一條又髒又臭的小溪，下列哪一個做法最有幫助？", "ans": "② 汙水先處理過再排放", "explain": "小溪變髒臭，主因是未經處理的汙水直接排入。最根本的解決方法是汙水先處理過再排放，減少汙染源。", "page": "p.82～83", "article": ""}, {"id": "mc_19", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 20, "q": "調查同一條溪，發現上游水質清澈、生物多；下游水混濁、生物很少。最可能的原因是什麼？", "ans": "② 下游受到汙染，環境變差了", "explain": "水質清澈、生物多代表環境健康；下游生物少、水混濁，最可能是農業、工廠或生活汙水流入，造成水質變差。", "page": "p.82～83", "article": ""}, {"id": "check_0", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 1, "q": "哪些是對岩石、沙和土壤的正確描述？", "ans": "應打勾：第1、2、4項", "explain": "[第1項] 正確：礫石顆粒比沙大。[第2項] 正確：土壤含有動植物腐爛後的養分（腐植質）。[第3項] 錯誤：沙不黏，黏土才黏。[第4項] 正確：岩石可蓋房子、做石桌椅。[第5項] 錯誤：土壤空隙中有水分和空氣。", "page": "p.8～15", "article": ""}, {"id": "check_1", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 2, "q": "哪些做法可以減少大雨帶來的地表災害？", "ans": "應打勾：第1、3、5項", "explain": "[第1項] 正確：在裸露山坡鋪草皮，根可固土。[第2項] 錯誤：砍樹改種淺根作物，土壤失去保護。[第3項] 正確：整治河川時保留河岸植物，防崩塌。[第4項] 錯誤：土石流危險區不應蓋民宿。[第5項] 正確：定期清除淤泥，保持排水順暢。", "page": "p.26～31", "article": ""}, {"id": "check_2", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 3, "q": "到溪邊遊玩，哪些是愛護水域環境的做法？", "ans": "應打勾：第2、3、5項", "explain": "[第1項] 錯誤：剩食入溪會汙染水質造成優氧化。[第2項] 正確：自己的垃圾自己帶走。[第3項] 正確：看到亂丟垃圾應向管理單位反映。[第4項] 錯誤：大量撈捕野生魚蝦破壞生態平衡。[第5項] 正確：只用眼睛觀察、不採摘，尊重自然。", "page": "p.80～85", "article": ""}, {"id": "fill_0", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 1, "q": "甲（配對題）：魚的移動方式", "ans": "A 用鰓呼吸，擺動鰭和尾巴游水", "explain": "魚屬於魚類，用鰓呼吸，靠擺動鰭和尾巴在水中游動。", "page": "p.64～65", "article": ""}, {"id": "fill_1", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 2, "q": "乙（配對題）：螺的移動方式", "ans": "B 用腹足爬行", "explain": "螺是軟體動物，靠身體腹面寬大的腹足緩慢爬行移動。", "page": "p.66～67", "article": ""}, {"id": "fill_2", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 3, "q": "丙（配對題）：蝦的移動方式", "ans": "C 用胸足和腹足游水、步行", "explain": "蝦有多對足，可以用胸足在水底步行，也能用腹足划水游動。", "page": "p.66～67", "article": ""}, {"id": "fill_3", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 4, "q": "丁（配對題）：蛙的呼吸方式", "ans": "D 腳上有蹼，用肺和潮溼的皮膚呼吸", "explain": "青蛙是兩棲類，用肺和潮溼的皮膚呼吸，腳趾間有蹼可以游泳。", "page": "p.68～69", "article": ""}, {"id": "fill_4", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 5, "q": "荷花：根在水底泥土，葉花直直伸出水面 → ___性", "ans": "挺水性", "explain": "挺水性：根固定在水底泥土，莖和葉挺出水面。代表植物：荷花、香蒲、蘆葦。", "page": "p.54～55", "article": ""}, {"id": "fill_5", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 6, "q": "槐葉萍：整株漂在水面，根泡在水裡隨水漂動 → ___性", "ans": "漂浮性", "explain": "漂浮性：整株漂在水面，根不固定在泥土中，隨水漂流。代表：槐葉萍、大萍、布袋蓮。", "page": "p.56～57", "article": ""}, {"id": "fill_6", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 7, "q": "臺灣萍蓬草：葉子平貼水面，長長的葉柄連到水底 → ___性", "ans": "浮葉性", "explain": "浮葉性：根固定在水底泥土，葉子浮在水面，有長長的葉柄連接。如臺灣萍蓬草、荇菜。", "page": "p.56～57", "article": ""}, {"id": "fill_7", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 8, "q": "水蘊草：整株沉在水中，莖和葉又細又柔軟 → ___性", "ans": "沉水性", "explain": "沉水性：整株沉在水面下，莖葉細柔，靠水傳送花粉。代表植物：水蘊草、金魚藻。", "page": "p.54～55", "article": ""}, {"id": "fill_8", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 9, "q": "浮葉性水生植物的 ___ 固定在水底泥土裡，葉片漂浮在水面上。", "ans": "根", "explain": "浮葉性的根固定在水底，讓植物不隨水漂走；葉片浮在水面接受陽光。", "page": "p.56～57", "article": ""}, {"id": "fill_9", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 10, "q": "漂浮性水生植物的根懸浮在 ___ 中，整株植物可以自由漂浮在水面上。", "ans": "水（水中）", "explain": "漂浮性植物的根懸浮在水中，不固定在泥土裡，所以能隨水自由漂動。", "page": "p.56～57", "article": ""}, {"id": "fill_10", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 11, "q": "挺水性水生植物的莖和葉直直挺出水面，根長在水底 ___ 裡。", "ans": "泥土", "explain": "挺水性植物根生長在水底泥土中，使植物穩固不倒；莖葉挺出水面進行光合作用。", "page": "p.54～55", "article": ""}, {"id": "fill_11", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 12, "q": "地震發生時，第一時間三個動作：趴下、___、穩住。", "ans": "掩護", "explain": "地震SOP三步驟：趴下→掩護→穩住。掩護是躲到桌下或用書包保護頭頸部，防止被落物砸傷。", "page": "p.40～41", "article": ""}, {"id": "fill_12", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 13, "q": "地震發生時，第一時間三個動作：趴下、掩護、___。", "ans": "穩住", "explain": "穩住是抓緊支撐物（如桌腳），保持穩定姿勢，等待搖晃停止，不要亂跑。", "page": "p.40～41", "article": ""}, {"id": "fill_13", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 14, "q": "地震報告中，___ 愈大，表示這次地震釋放的能量愈多。", "ans": "規模", "explain": "規模衡量地震本身釋放的總能量，全球只有一個數字；震度是各地感受到的震動強弱，各地不同。", "page": "p.36～37", "article": ""}, {"id": "fill_14", "section": "fill", "label": "四、填填看", "color": "#16a34a", "num": 15, "q": "同一次地震，離震央愈近的地方，___ 通常愈大。", "ans": "震度", "explain": "震度反映當地感受到的震動強度，離震央愈近震度通常愈大；規模是固定的，與距離無關。", "page": "p.36～37", "article": ""}, {"id": "reading_0", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 1, "q": "七股沙洲的沙，最早是從哪裡來的？", "ans": "② 曾文溪從上游搬運下來", "explain": "文章說：這些沙洲的沙，最早是曾文溪從上游一路搬運下來，在出海口慢慢堆積而成的。這是河流的搬運和堆積作用。", "page": "p.20～21", "article": "七股有一片全臺灣最大的潟湖。潟湖外有三座沙洲，像天然屏障替裡面擋住大浪。這些沙洲的沙，最早是曾文溪從上游搬運下來，在出海口慢慢堆積而成的。近年來，上游水庫把泥沙攔了下來，送到沙洲的沙愈來愈少；再加上颱風大浪一次次把沙帶走，沙洲一年比一年瘦、一年比一年小。沙洲變小後，大浪可以直接打進潟湖，蚵架被打壞、牡蠣不容易養活，許多小魚小蝦的家也跟著受到影響。為了留住沙洲，人們插竹樁擋浪、種植耐鹽植物，也用抽砂的方式把沙補回沙洲。"}, {"id": "reading_1", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 2, "q": "上游興建水庫後，對沙洲最直接的影響是什麼？", "ans": "① 沙洲得到的沙變少，愈來愈小", "explain": "水庫把泥沙攔截，送到下游的沙大量減少，沙洲補充不足，加上海浪侵蝕，沙洲就愈來愈小。", "page": "p.20～25", "article": "七股有一片全臺灣最大的潟湖。潟湖外有三座沙洲，像天然屏障替裡面擋住大浪。這些沙洲的沙，最早是曾文溪從上游搬運下來，在出海口慢慢堆積而成的。近年來，上游水庫把泥沙攔了下來，送到沙洲的沙愈來愈少；再加上颱風大浪一次次把沙帶走，沙洲一年比一年瘦、一年比一年小。沙洲變小後，大浪可以直接打進潟湖，蚵架被打壞、牡蠣不容易養活，許多小魚小蝦的家也跟著受到影響。為了留住沙洲，人們插竹樁擋浪、種植耐鹽植物，也用抽砂的方式把沙補回沙洲。"}, {"id": "reading_2", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 3, "q": "颱風的大浪一次又一次把沙帶走，這是海水對地表的什麼作用？", "ans": "② 侵蝕和搬運作用", "explain": "大浪拍打沙洲，把沙侵蝕下來並搬運走，這是水的侵蝕和搬運作用，與堆積作用相反。", "page": "p.20～23", "article": "七股有一片全臺灣最大的潟湖。潟湖外有三座沙洲，像天然屏障替裡面擋住大浪。這些沙洲的沙，最早是曾文溪從上游搬運下來，在出海口慢慢堆積而成的。近年來，上游水庫把泥沙攔了下來，送到沙洲的沙愈來愈少；再加上颱風大浪一次次把沙帶走，沙洲一年比一年瘦、一年比一年小。沙洲變小後，大浪可以直接打進潟湖，蚵架被打壞、牡蠣不容易養活，許多小魚小蝦的家也跟著受到影響。為了留住沙洲，人們插竹樁擋浪、種植耐鹽植物，也用抽砂的方式把沙補回沙洲。"}, {"id": "reading_3", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 4, "q": "沙洲變小後，養蚵人家最可能遇到什麼困難？", "ans": "① 蚵架被打壞，牡蠣不容易養活", "explain": "文章說蚵架被打壞、牡蠣不容易養活，沙洲是天然防波堤，沙洲變小後浪直接打入潟湖，養殖業受嚴重影響。", "page": "p.78～79", "article": "七股有一片全臺灣最大的潟湖。潟湖外有三座沙洲，像天然屏障替裡面擋住大浪。這些沙洲的沙，最早是曾文溪從上游搬運下來，在出海口慢慢堆積而成的。近年來，上游水庫把泥沙攔了下來，送到沙洲的沙愈來愈少；再加上颱風大浪一次次把沙帶走，沙洲一年比一年瘦、一年比一年小。沙洲變小後，大浪可以直接打進潟湖，蚵架被打壞、牡蠣不容易養活，許多小魚小蝦的家也跟著受到影響。為了留住沙洲，人們插竹樁擋浪、種植耐鹽植物，也用抽砂的方式把沙補回沙洲。"}, {"id": "reading_4", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 5, "q": "人們正在做哪個行動來留住沙洲？", "ans": "② 插竹樁擋浪並把沙補回沙洲", "explain": "文章說：人們在沙洲上插竹樁擋浪、種植耐鹽的植物，也用抽砂的方式把沙補回沙洲。", "page": "p.30～31", "article": "七股有一片全臺灣最大的潟湖。潟湖外有三座沙洲，像天然屏障替裡面擋住大浪。這些沙洲的沙，最早是曾文溪從上游搬運下來，在出海口慢慢堆積而成的。近年來，上游水庫把泥沙攔了下來，送到沙洲的沙愈來愈少；再加上颱風大浪一次次把沙帶走，沙洲一年比一年瘦、一年比一年小。沙洲變小後，大浪可以直接打進潟湖，蚵架被打壞、牡蠣不容易養活，許多小魚小蝦的家也跟著受到影響。為了留住沙洲，人們插竹樁擋浪、種植耐鹽植物，也用抽砂的方式把沙補回沙洲。"}];
+var SECS = [{"key": "tf", "label": "一、是非題", "color": "#6366f1", "count": 10}, {"key": "mc", "label": "二、選擇題", "color": "#0891b2", "count": 20}, {"key": "check", "label": "三、勾選題", "color": "#d97706", "count": 3}, {"key": "fill", "label": "四、填填看", "color": "#16a34a", "count": 15}, {"key": "reading", "label": "五、閱讀素養", "color": "#db2777", "count": 5}];
+var state = {};
+var curId = null;
+
+function buildGrid() {
+  var container = document.getElementById('mainGrid');
+  SECS.forEach(function(sec) {
+    var block = document.createElement('div');
+    block.className = 'sec-block';
+    var hdr = document.createElement('div');
+    hdr.className = 'sec-hdr';
+    hdr.style.background = sec.color;
+    hdr.innerHTML = '<span>' + sec.label + '</span><span class="sec-badge">' + sec.count + ' 題</span>';
+    block.appendChild(hdr);
+    var grid = document.createElement('div');
+    grid.className = 'bubble-grid';
+    grid.id = 'grid_' + sec.key;
+    block.appendChild(grid);
+    container.appendChild(block);
+  });
+
+  QS.forEach(function(q) {
+    var grid = document.getElementById('grid_' + q.section);
+    if (!grid) return;
+    var btn = document.createElement('button');
+    btn.className = 'bubble s-default';
+    btn.id = 'bbl_' + q.id;
+    var numSpan = document.createElement('span');
+    numSpan.textContent = q.num;
+    var iconSpan = document.createElement('span');
+    iconSpan.className = 'status-icon';
+    iconSpan.id = 'icon_' + q.id;
+    btn.appendChild(numSpan);
+    btn.appendChild(iconSpan);
+    btn.onclick = (function(id){ return function(){ openModal(id); }; })(q.id);
+    grid.appendChild(btn);
+  });
+}
+
+function openModal(id) {
+  curId = id;
+  var q = null;
+  for (var i=0;i<QS.length;i++) { if (QS[i].id===id) { q=QS[i]; break; } }
+  if (!q) return;
+
+  document.getElementById('modalTag').textContent = q.label;
+  document.getElementById('modalTag').style.background = q.color;
+  document.getElementById('modalNum').textContent = '第 ' + q.num + ' 題';
+  document.getElementById('modalQ').textContent = q.q;
+  document.getElementById('modalAns').textContent = q.ans;
+  document.getElementById('modalExp').textContent = q.explain;
+  document.getElementById('modalPage').textContent = q.page;
+
+  var artSec = document.getElementById('articleSection');
+  if (q.article) {
+    artSec.style.display = 'block';
+    document.getElementById('articleText').textContent = q.article;
+  } else {
+    artSec.style.display = 'none';
+  }
+
+  var cur = state[id] || null;
+  document.getElementById('sOk').className = 'sbtn ok';
+  document.getElementById('sPartial').className = 'sbtn partial';
+  document.getElementById('sNo').className = 'sbtn no';
+  if (cur==='ok') document.getElementById('sOk').className = 'sbtn ok sel-ok';
+  if (cur==='partial') document.getElementById('sPartial').className = 'sbtn partial sel-partial';
+  if (cur==='no') document.getElementById('sNo').className = 'sbtn no sel-no';
+
+  if (!state[id]) {
+    state[id] = 'seen';
+    updateBubble(id);
+    updateProgress();
+  }
+
+  document.getElementById('overlay').className = 'overlay show';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').className = 'overlay';
+  document.body.style.overflow = '';
+  curId = null;
+}
+
+function overlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeOverlay();
+}
+
+function setStatus(s) {
+  if (!curId) return;
+  state[curId] = s;
+  updateBubble(curId);
+  updateProgress();
+  document.getElementById('sOk').className = 'sbtn ok';
+  document.getElementById('sPartial').className = 'sbtn partial';
+  document.getElementById('sNo').className = 'sbtn no';
+  if (s==='ok') document.getElementById('sOk').className = 'sbtn ok sel-ok';
+  if (s==='partial') document.getElementById('sPartial').className = 'sbtn partial sel-partial';
+  if (s==='no') document.getElementById('sNo').className = 'sbtn no sel-no';
+  setTimeout(closeOverlay, 600);
+}
+
+function updateBubble(id) {
+  var s = state[id] || 'default';
+  var bbl = document.getElementById('bbl_' + id);
+  if (!bbl) return;
+  bbl.className = 'bubble s-' + s;
+  var icon = document.getElementById('icon_' + id);
+  if (!icon) return;
+  if (s==='ok') icon.textContent = '✓';
+  else if (s==='partial') icon.textContent = '!';
+  else if (s==='no') icon.textContent = '?';
+  else if (s==='seen') icon.textContent = '👁';
+  else icon.textContent = '';
+}
+
+function updateProgress() {
+  var rated = 0;
+  for (var k in state) { if (state[k]==='ok'||state[k]==='partial'||state[k]==='no') rated++; }
+  var total = QS.length;
+  var pct = Math.round(rated/total*100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = '已標記 ' + rated + ' / ' + total + ' 題';
+}
+
+function doExport() {
+  var name = document.getElementById('studentName').value || '（未填姓名）';
+  var now = new Date();
+  var ds = now.getFullYear() + '/' + (now.getMonth()+1) + '/' + now.getDate();
+  var ok=0,partial=0,no=0;
+  for (var k in state) {
+    if (state[k]==='ok') ok++;
+    else if (state[k]==='partial') partial++;
+    else if (state[k]==='no') no++;
+  }
+  document.getElementById('snapMeta').innerHTML =
+    '姓名：<strong>' + name + '</strong>　日期：' + ds + '<br>' +
+    '✅已熟練 ' + ok + ' 題　⚠️尚未熟練 ' + partial + ' 題　❓還是不懂 ' + no + ' 題';
+
+  var content = document.getElementById('snapContent');
+  content.innerHTML = '';
+  SECS.forEach(function(sec) {
+    var qs = QS.filter(function(q){ return q.section===sec.key; });
+    var div = document.createElement('div');
+    div.className = 'snap-sec';
+    var title = document.createElement('div');
+    title.className = 'snap-sec-title';
+    title.style.color = sec.color;
+    title.textContent = sec.label;
+    div.appendChild(title);
+    var row = document.createElement('div');
+    row.className = 'snap-bubbles';
+    qs.forEach(function(q) {
+      var s = state[q.id] || 'default';
+      var b = document.createElement('div');
+      b.className = 'snap-bbl sn-' + s;
+      b.textContent = q.num;
+      row.appendChild(b);
+    });
+    div.appendChild(row);
+    content.appendChild(div);
+  });
+
+  document.getElementById('snapshot').style.display = 'block';
+  setTimeout(function() {
+    document.getElementById('snapshot').scrollIntoView({behavior:'smooth'});
+    alert('請用手機截圖或電腦截圖後繳交給老師！');
+  }, 200);
+}
+
+window.onload = function() {
+  buildGrid();
+};
+</script>
+</body>
+</html>
