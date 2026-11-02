@@ -81,25 +81,44 @@ body{font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif;background:var(-
 .help,.legend{max-width:680px;margin:12px auto;padding:0 16px;color:#475569;font-size:.86rem;line-height:1.8}.legend{font-size:.78rem}.q-box{white-space:pre-line}.ans-value{line-height:1.7}#questionFigure{margin:0 0 16px}#questionImage{display:block;width:100%;height:auto;border:1px solid #cbd5e1;border-radius:8px}figcaption{font-size:.75rem;color:#64748b;text-align:center;margin:6px}.page-chip{border-radius:10px;line-height:1.8}.tools{max-width:680px;margin:0 auto;padding:0 16px;display:flex;gap:12px}.tools button{padding:10px;border:1px solid #cbd5e1;background:white;border-radius:8px;color:#334155;font-family:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #f59e0b;outline-offset:3px}.modal{overscroll-behavior:contain}.name-row input{min-height:40px}.close-btn{min-width:44px;min-height:44px}.snapshot-note{font-size:.8rem;color:#64748b}
 @media(max-width:440px){.status-btns{gap:4px}.sbtn{font-size:.8rem}.export-btn{bottom:10px;right:10px}.hdr{position:relative}.page-chip{font-size:.75rem}}
 @media print{body{padding:0;background:white}.hdr,.prog-wrap,.help,.legend,.container,.tools,.export-btn,.overlay{display:none!important}#snapshot{display:block!important}}
+
+[hidden]{display:none!important}.name-row{flex-wrap:wrap}.name-row input{width:135px}.name-row #studentSeat{width:75px}.name-row select,.name-row button{border:0;border-radius:8px;padding:9px;font:inherit}.name-row button{background:#fff;color:#312e81;font-weight:700;cursor:pointer}.header-links{margin-top:12px;display:flex;gap:16px;justify-content:center}.header-links a,.header-links button{color:white;background:none;border:0;font:inherit;font-size:.8rem;cursor:pointer}.notice{max-width:1000px;margin:16px auto;padding:12px 16px;border-radius:10px;background:#e0f2fe;color:#0c4a6e;line-height:1.8}.notice.error{background:#fee2e2;color:#991b1b}.tools p{font-size:.85rem;color:#475569;line-height:1.8}.export-btn:disabled{opacity:.5;cursor:default}#teacherView{max-width:1200px;margin:0 auto;padding:24px 18px}.teacher-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;color:#172554;margin-bottom:20px}.teacher-heading h1{font-size:1.8rem;margin:5px 0 10px}.teacher-heading p{line-height:1.8}.eyebrow{font-size:.8rem;color:#64748b}.panel{background:white;border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 4px 16px #1e3a8a0b}.panel h2{font-size:1.15rem;color:#1e3a8a;margin-bottom:14px}.panel input,.panel select{font:inherit;border:1px solid #cbd5e1;border-radius:8px;padding:10px;max-width:100%}.panel button{font:inherit;cursor:pointer;border:1px solid #cbd5e1;background:#eff6ff;color:#1e3a8a;border-radius:8px;padding:10px 14px}.panel button:disabled{opacity:.5;cursor:wait}.panel label{color:#334155}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0}.toolbar label{display:flex;align-items:center;gap:6px}.summary{font-size:1.05rem;line-height:1.8;font-weight:700;color:#1e3a8a}.muted{font-size:.85rem;color:#64748b;line-height:1.8;margin-top:12px}#teacherAuth{max-width:600px}#teacherAuth form>label{display:block;margin:12px 0 6px}#teacherAuth form>input{width:100%}.table-wrap{overflow:auto;margin-top:15px}table{border-collapse:collapse;width:100%;min-width:830px;text-align:left;font-size:.88rem}th{background:#eef2ff;white-space:nowrap}td,th{padding:12px 10px;border-bottom:1px solid #e2e8f0;vertical-align:top}td:last-child{min-width:210px}.question-link{font-size:.8rem!important;background:#fff1f2!important;color:#9f1239!important;border-color:#fecdd3!important;margin:3px;padding:6px 9px!important}.red-card{border:1px solid #fecaca;background:#fffafa;border-radius:10px;padding:15px;margin:12px 0}.red-card h3{font-size:1rem;margin-bottom:8px}.red-card p{line-height:1.8;font-size:.9rem;white-space:pre-line}.red-names{color:#9f1239;font-size:.82rem!important;margin-top:10px}details summary{font-weight:700;color:#1e3a8a;cursor:pointer}#seatStart,#seatEnd{width:80px}@media(max-width:650px){.teacher-heading{align-items:flex-start;flex-direction:column}.panel{padding:15px}.teacher-heading h1{font-size:1.5rem}}
 </style>
 </head>
 <body>
 
-<div class="hdr">
+<div class="hdr" id="studentHeader">
   <h1>🎯 訂正站 · 四年級上學期自然科期中考卷</h1>
   <p>範圍：第一單元 地表的靜與動、第二單元 水生生物與環境</p>
   <div class="name-row">
-    <label>學生姓名：</label>
-    <input type="text" id="studentName" placeholder="請輸入姓名">
+    <label for="studentClass">班級</label><select id="studentClass"><option value="">載入班級中……</option></select>
+    <label for="studentSeat">座號</label><input type="number" id="studentSeat" min="1" max="99" inputmode="numeric" placeholder="座號">
+    <label for="studentName">姓名</label><input type="text" id="studentName" maxlength="30" placeholder="請輸入姓名" autocomplete="off">
+    <button id="startStudent" type="button">開始訂正</button><button id="switchStudent" type="button" hidden>切換學生</button>
   </div>
+  <div class="header-links"><button id="reloadClasses" type="button">重新載入班級</button><a href="teacher.html">教師後台</a></div>
 </div>
 
+<p id="onlineNotice" class="notice" role="status" aria-live="polite">正在連接繳交系統……</p>
+<div id="studentWork" hidden>
 <div class="prog-wrap">
   <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
   <div class="prog-label" id="progLabel">已標記 0 / 53 題</div>
 </div>
 
-<p class="help">先在紙本完成訂正，再點選題號看解說，標記你現在的熟練程度。<br>康軒版・頁碼依提供的教學指引內嵌課本頁碼。<br>看圖題依原卷小題順序分成 15 格；勾選題每組一個訂正按鈕。</p><p class="help" id="storageNote">進度只保存在這個瀏覽器；共用裝置請完成後清除。</p><div class="legend">灰色：未開啟／已看過　綠色 ✓：已熟練　橘色 !：尚未熟練　紅色 ?：還是不懂</div><div class="container" id="mainGrid"></div><div class="tools"><button onclick="if(confirm('要清除這個瀏覽器的姓名和訂正進度嗎？')){localStorage.removeItem(STORE);location.reload();}">清除本機紀錄</button><button onclick="doExport()">查看訂正紀錄</button></div>
+<p class="help">先在紙本完成訂正，再點選題號看解說，標記你現在的熟練程度。<br>康軒版・頁碼依提供的教學指引內嵌課本頁碼。<br>看圖題依原卷小題順序分成 15 格；勾選題每組一個訂正按鈕。</p><p class="help" id="storageNote">進度會保留在這個瀏覽器；完成標記後，請按「繳交訂正」讓老師收到。</p><div class="legend">灰色：未開啟／已看過　綠色 ✓：已熟練　橘色 !：尚未熟練　紅色 ?：還是不懂</div><div class="container" id="mainGrid"></div></div>
+<div class="tools" id="studentTools"><p>每個項目都要選一種熟練程度；還不懂的題目可以標紅色再繳交。</p></div>
+<section id="teacherView" hidden>
+ <header class="teacher-heading"><div><p class="eyebrow">康軒版・四上自然期中考</p><h1>訂正繳交監控</h1><p>依班級掌握繳交情況，找出需要一起講解的題目。</p></div><a href="index.html">返回學生訂正頁</a></header>
+ <p id="teacherNotice" class="notice" role="status" aria-live="polite">請使用已授權的教師帳號登入。</p>
+ <section class="panel" id="teacherAuth"><h2>教師登入</h2><form onsubmit="event.preventDefault();login('login')"><label for="teacherEmail">教師 Email</label><input type="email" id="teacherEmail" autocomplete="username" placeholder="教師 Email" required><label for="teacherPassword">密碼</label><input type="password" id="teacherPassword" autocomplete="current-password" minlength="8" placeholder="請輸入密碼" required><div class="toolbar"><button id="teacherLogin" type="submit">登入後台</button><button id="teacherSignup" type="button">首次使用：註冊教師帳號</button></div></form><p class="muted">已有這個系統的帳號可直接登入。首次註冊後，請先完成信箱驗證，再回到這頁登入。只有老師指定的 Email 能查看學生紀錄。</p></section>
+ <div id="teacherPanel" hidden>
+  <div class="panel"><div class="toolbar"><label for="classFilter">班級</label><select id="classFilter"><option value="">全部班級</option></select><button id="refreshDashboard">立即更新</button><button id="teacherLogout">登出</button><a id="classPageLink" href="?teacher=1" target="_blank" rel="noopener">班級監控頁面</a></div><p id="teacherSummary" class="summary"></p></div>
+  <section class="panel"><h2>學生繳交列表</h2><div class="toolbar"><label for="submissionFilter">顯示</label><select id="submissionFilter"><option value="">全部學生</option><option value="submitted">已繳交</option><option value="missing">未繳交</option><option value="red">有紅色題目</option></select><label for="studentSearch">搜尋</label><input id="studentSearch" placeholder="姓名或座號"></div><div class="table-wrap"><table><thead><tr><th>班級</th><th>座號</th><th>姓名</th><th>繳交狀態</th><th>最後繳交時間</th><th>熟練標記</th><th>紅色題目（點選可講解）</th></tr></thead><tbody id="studentRows"></tbody></table></div></section>
+  <section class="panel"><h2>紅色題目講解清單</h2><p class="muted">依目前選取班級統計，標紅人數最多的題目排在前面。點題號可開啟題目、答案與解析。</p><div id="redQuestions"></div></section>
+  <details class="panel"><summary>設定各班座號範圍</summary><p class="muted">設定後才能列出未繳交座號。修改同名班級會更新座號範圍，已繳交紀錄會保留。</p><div class="toolbar"><label>班級<input id="newClassName" placeholder="例如：401 班" maxlength="20"></label><label>起號<input id="seatStart" type="number" min="1" max="99" value="1"></label><label>迄號<input id="seatEnd" type="number" min="1" max="99" value="30"></label><label>缺號<input id="seatOmit" placeholder="例如：4、13"></label><button id="saveClass">儲存班級</button></div></details>
+ </div>
+</section>
 
 <div class="overlay" id="overlay" onclick="overlayClick(event)">
   <div class="modal" role="dialog" aria-modal="true" aria-label="題目訂正">
@@ -120,37 +139,23 @@ body{font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif;background:var(-
       </div>
       <div class="exp-box"><strong class="exp-title">📖 詳細解說</strong><span id="modalExp"></span></div>
       <div><span class="page-chip">📚 康軒版四上自然 <span id="modalPage"></span></span></div>
-      <div class="status-label">這一題你現在會了嗎？</div>
+      <div id="studentStatusActions"><div class="status-label">這一題你現在會了嗎？</div>
       <div class="status-btns">
         <button class="sbtn ok" id="sOk" onclick="setStatus('ok')"><span class="icon">✅</span>已熟練</button>
         <button class="sbtn partial" id="sPartial" onclick="setStatus('partial')"><span class="icon">⚠️</span>尚未熟練</button>
         <button class="sbtn no" id="sNo" onclick="setStatus('no')"><span class="icon">❓</span>還是不懂</button>
-      </div>
+      </div></div>
     </div>
   </div>
 </div>
 
-<div id="snapshot"><p id="exportHint" class="snapshot-note" hidden>請將下方完整紀錄截圖，依老師指定方式繳交。</p>
-  <h2>訂正記錄表｜115 學年度四上自然期中考</h2><p class="snapshot-note">康軒版・1016 試題卷｜這是自我檢核紀錄，請依老師指定方式繳交。</p>
-  <div class="snap-meta" id="snapMeta"></div>
-  <div id="snapContent"></div>
-  <div class="snap-legend">
-    <span><span class="snap-dot" style="background:#16a34a"></span>已熟練</span>
-    <span><span class="snap-dot" style="background:#f59e0b"></span>尚未熟練</span>
-    <span><span class="snap-dot" style="background:#dc2626"></span>還是不懂</span>
-    <span><span class="snap-dot" style="background:#cbd5e1"></span>已看過</span><span><span class="snap-dot" style="background:#e2e8f0"></span>未開啟</span>
-  </div>
-</div>
-
-<button class="export-btn" onclick="doExport()">📸 輸出截圖繳交</button>
-
+<button class="export-btn" id="submitWork" onclick="submitWork()" disabled>繳交訂正</button>
 <script>
 var QS = [{"id": "tf_0", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 1, "q": "地表環境是由生物和非生物共同組成的。", "ans": "○ 正確", "explain": "地表環境包含生物和非生物。動植物是生物；空氣、水、岩石、沙和土壤是非生物。", "page": "12～13", "image": "", "article": ""}, {"id": "tf_1", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 2, "q": "比較岩石、沙和土壤三種地表物質，土壤的顆粒最大。", "ans": "× 錯誤", "explain": "本課比較的三種物質，岩石或礫石的顆粒最大，沙其次，土壤的顆粒最小。", "page": "16～17", "image": "", "article": ""}, {"id": "tf_2", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 3, "q": "地震發生時，震源是地底下最先開始震動的位置，震央是地面上正對著震源的地點。", "ans": "○ 正確", "explain": "震源是地底下最先開始震動的位置；震央是地面上正對震源的位置。記住：震源在地下，震央在地表。", "page": "25", "image": "", "article": ""}, {"id": "tf_3", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 4, "q": "地震發生時，只要躲到安全地方等待就好，平時不需要做防震準備也能確保安全。", "ans": "× 錯誤", "explain": "平時就要固定家具、準備緊急避難包、熟悉逃生路線並參加演練，才能減少災害。", "page": "28～29", "image": "", "article": ""}, {"id": "tf_4", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 5, "q": "中央氣象署可以在地震發生「之前」，準確預報地震什麼時候會來。", "ans": "× 錯誤", "explain": "地震報告是在地震發生後發布。地震速報也屬於震後資訊，不是提前準確預報地震發生的時間。", "page": "25、30～31", "image": "", "article": ""}, {"id": "tf_5", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 6, "q": "地震的規模愈大，就表示人體感覺到的搖晃愈激烈。", "ans": "× 錯誤", "explain": "規模代表地震釋放的能量；震度代表各地搖晃的強弱。同一次地震的規模相同，各地震度卻可能不同。", "page": "25～27", "image": "", "article": ""}, {"id": "tf_6", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 7, "q": "水田、魚塭和學校的生態池，都是人為建造的水域環境。", "ans": "○ 正確", "explain": "水田、魚塭、生態池是人為建造的水域環境；溪流、湖泊和海洋則是天然水域環境。", "page": "38～39、43～45", "image": "", "article": ""}, {"id": "tf_7", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 8, "q": "沉水性水生植物的莖和葉又硬又粗，才不會被水流沖走。", "ans": "× 錯誤", "explain": "沉水性植物的莖和葉通常柔軟，能隨水流伸展或彎曲，適應水中的環境。", "page": "54～55", "image": "", "article": ""}, {"id": "tf_8", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 9, "q": "魚呼吸時，水從口流入、經過魚鰓後再從鰓蓋流出去。", "ans": "○ 正確", "explain": "魚的口和鰓蓋不停開合，讓水由口進入、流經鰓，再由鰓蓋開口流出，完成呼吸。", "page": "60", "image": "", "article": ""}, {"id": "tf_9", "section": "tf", "label": "一、是非題", "color": "#6366f1", "num": 10, "q": "把家裡養不下的魚放到野外的溪流，是愛護水域環境的好方法。", "ans": "× 錯誤", "explain": "不可任意放生。放到野外的魚可能競爭食物和空間、影響原有生物，破壞水域生態。", "page": "66～67", "image": "", "article": ""}, {"id": "mc_0", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 1, "q": "阿寬在溪邊撿到三樣東西：一顆小小的石頭、一把細細的沙、和一把溼溼的泥土。請將顆粒由大到小排出正確的順序。\n①石頭→沙→泥土　  ②沙→石頭→泥土　\n③泥土→沙→石頭　  ④石頭→泥土→沙", "ans": "① 石頭 → 沙 → 泥土", "explain": "比較顆粒大小：岩石或礫石最大，沙其次，土壤最小。", "page": "16～17", "image": "", "article": ""}, {"id": "mc_1", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 2, "q": "媽媽想在頂樓種西瓜，資料上說西瓜適合種在排水良好的地方。她應該挑選哪一種土來種？\n①很黏又常積水的溼土　\n②鬆散、排水良好的沙質土　\n③鋪滿大石頭的地面　\n④完全沒有養分的細沙", "ans": "② 鬆散、排水良好的沙質土", "explain": "西瓜適合排水良好的土壤；沙質土較鬆散，符合題目的條件。只有大石頭或完全沒有養分的細沙都不適合。", "page": "15", "image": "", "article": ""}, {"id": "mc_2", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 3, "q": "下列哪一項「不是」改變地表形貌的自然作用？\n①流水作用　②風的作用　③地震　④開挖礦山", "ans": "④ 開挖礦山", "explain": "開挖礦山是人類活動；流水、風和地震則屬於自然作用。", "page": "18～23", "image": "", "article": ""}, {"id": "mc_3", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 4, "q": "小寧在自然課做實驗 : 在混合了礫石、沙和土壤的土堆上澆水，把水量從「小雨」調大成「大雨」，土堆上的地表物質會怎麼樣？\n①都不會移動　   ②被搬運到更遠的地方　\n③被搬運到更近的地方　④只有礫石會移動", "ans": "② 被搬運到更遠的地方", "explain": "依土堆澆水實驗，水量增加、流水作用增強時，地表物質會被搬得比較遠，也比較多。", "page": "19～20", "image": "", "article": ""}, {"id": "mc_4", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 5, "q": "下列關於岩石、沙和土壤的描述，哪一個選項是正確的？\n①岩石、沙和土壤的顆粒大小完全相同\n②三種物質中，岩石顆粒最大，沙居中，土壤顆粒最小顆粒愈小　\n③土壤顆粒最大，所以重量也最重\n④沙的顆粒比岩石大，但比土壤小。", "ans": "② 岩石最大，沙居中，土壤最小", "explain": "本課觀察的三種地表物質，岩石或礫石的顆粒最大，沙其次，土壤最小。原選項末尾多出的「顆粒愈小」是試卷文字重複。", "page": "16～17", "image": "", "article": ""}, {"id": "mc_5", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 6, "q": "阿寬想為多肉植物挑選一種排水最快的土壤。下列哪一種排水速度最快？\n①黏性很強的黏土　  ②顆粒細小的腐植土　\n③顆粒粗大的沙質土　④土壤與黏土的混合", "ans": "③ 顆粒粗大的沙質土", "explain": "在題目的四種選項中，顆粒較粗大的沙質土通常排水較快；黏性強、細緻的土較容易留住水分。這是延伸應用。", "page": "15～17（延伸）", "image": "", "article": ""}, {"id": "mc_6", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 7, "q": "把土壤、沙和礫石混入水中攪拌後靜置，從杯底到水面的排列順序是什麼？\n①礫石最下，沙居中，土壤浮最上　\n②土壤最下，礫石最上　\n③三者均勻混合不分層　\n④沙最下，土壤居中，礫石最上", "ans": "① 礫石最下，沙居中，土壤在最上層", "explain": "本題預期粗顆粒先沉到下方，細顆粒較慢沉降。土壤細粒是位於沉積物上層，不是所有土壤都會一直浮在水面；可漂浮的通常是枯枝落葉等有機物。這是延伸觀察。", "page": "16～17（延伸）", "image": "", "article": ""}, {"id": "mc_7", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 8, "q": "地震時，地底下最先開始震動的位置，叫做什麼？\n①震央　②震源　\n③震度　④規模", "ans": "② 震源", "explain": "震源在地下，是最先開始震動的位置；震央在地表正對震源的位置。", "page": "25", "image": "", "article": ""}, {"id": "mc_8", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 9, "q": "上課到一半突然發生地震，小葵應該先做哪一個動作最正確？\n①衝出教室去搭電梯　 \n②站到窗邊看外面發生什麼事　\n③趴下、掩護、穩住　\n④先把書包收好再逃", "ans": "③ 趴下、掩護、穩住", "explain": "先趴下，保護頭頸並躲在穩固桌下掩護，再抓住桌腳穩住。搖晃時不要衝向窗邊或搭電梯。", "page": "28～29", "image": "", "article": ""}, {"id": "mc_9", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 10, "q": "下列哪一項是「平時」就該做好的防震準備？\n①準備緊急避難包，並熟悉逃生路線\n②把重物和易碎品放在高高的櫃子上　\n③地震搖晃時才打開大門　　\n④等地震過後再去買手電筒", "ans": "① 準備緊急避難包，並熟悉逃生路線", "explain": "防震準備要在平時完成。重物和易碎物應避免放高處，逃生路線也要先熟悉。", "page": "28～29", "image": "", "article": ""}, {"id": "mc_10", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 11, "q": "下列哪一組「生物」和「生存環境」的配對是正確的？\n①玉山圓柏－海洋　  ②招潮蟹－高山　\n③松鼠－森林      　④珊瑚－水田", "ans": "③ 松鼠－森林", "explain": "松鼠適合森林環境；玉山圓柏在高山、招潮蟹在潮間帶，珊瑚則在海洋。", "page": "40～45", "image": "", "article": ""}, {"id": "mc_11", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 12, "q": "下列哪一個是「天然形成」的水域環境？\n①生態池　②水田　③魚塭　④溪流", "ans": "④ 溪流", "explain": "溪流是天然水域。生態池、水田與魚塭則是人為建造或管理的水域。", "page": "38～39、43～45", "image": "", "article": ""}, {"id": "mc_12", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 13, "q": "探險隊要到溪邊做水域調查，下列哪一項準備「不適合」？\n①出發前先查看氣象報告　\n②帶著水生生物圖鑑和撈網　\n③穿拖鞋方便下水玩耍　\n④結伴同行並注意環境安全", "ans": "③ 穿拖鞋方便下水玩耍", "explain": "水域調查應穿適當服裝和鞋子，避免滑倒或受傷，不能穿拖鞋下水玩耍。查看天氣、準備圖鑑、結伴同行都是正確做法。", "page": "46～47", "image": "", "article": ""}, {"id": "mc_13", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 14, "q": "布袋蓮的葉柄膨大、裡面有許多氣室；水蘊草的莖和葉又細又柔軟。這兩種構造的相同作用是什麼？\n①幫助它們適應水中的生活　\n②幫助它們在乾燥的陸地生長　\n③幫助它們抵抗強風吹襲　\n④幫助它們捕捉小昆蟲", "ans": "① 幫助它們適應水中的生活", "explain": "布袋蓮的氣室幫助漂浮；水蘊草柔軟的莖葉能隨水流彎曲。構造不同，都有助於適應水中生活。", "page": "52～55", "image": "", "article": ""}, {"id": "mc_14", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 15, "q": "午餐有四道菜，哪一道菜的主要食材「不是」來自水域環境？\n①炒高麗菜   　②清蒸鱸魚　\n③涼拌海帶   　④蚵仔煎", "ans": "① 炒高麗菜", "explain": "高麗菜主要種在陸地；鱸魚、海帶與蚵仔都是來自水域的食材。", "page": "64～65", "image": "", "article": ""}, {"id": "mc_15", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 16, "q": "下列關於「岩石」的描述，哪一項是正確的？\n①岩石受溫度、風和水長期影響，慢慢碎裂變小　②岩石永遠不會改變形狀\n③岩石只有在地震時才會碎裂　\n④只有人類才能讓岩石變小", "ans": "① 岩石受溫度、風和水長期影響，慢慢碎裂變小", "explain": "岩石受到溫度變化、風和水等長期影響，會逐漸碎裂。不是只有地震或人類活動才能改變岩石。", "page": "16～18", "image": "", "article": ""}, {"id": "mc_16", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 17, "q": "下列對地震的「規模」和「震度」的說明，哪一項是正確？\n①規模代表地震能量大小  \n②兩者完全一樣　\n③規模代表各地搖晃強度　\n④震度愈大就代表能量愈大", "ans": "① 規模代表地震能量大小", "explain": "規模表示地震釋放能量的大小，震度表示各地搖晃強弱，兩者意義不同。", "page": "25～27", "image": "", "article": ""}, {"id": "mc_17", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 18, "q": "下列哪一種是魚用來在水中游動的主要構造？\n①魚鰓 　②魚鱗　 ③魚鰭　 ④魚眼", "ans": "③ 魚鰭", "explain": "魚靠擺動魚鰭在水中運動並控制方向。鰓主要負責呼吸，鱗片可保護身體。", "page": "59", "image": "", "article": ""}, {"id": "mc_18", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 19, "q": "睡蓮的根固定在水底、葉子浮在水面上。睡蓮是屬於哪一類水生植物？\n①沉水性　②挺水性　③漂浮性　④浮葉性", "ans": "④ 浮葉性", "explain": "睡蓮的根固定在水底泥土中，葉片平貼水面，屬於浮葉性。荷花的成熟葉片挺出水面，屬於挺水性。", "page": "50～51、56～57", "image": "", "article": ""}, {"id": "mc_19", "section": "mc", "label": "二、選擇題", "color": "#0891b2", "num": 20, "q": "下列哪一種行為「不會」破壞水域環境？\n①把工廠廢水直接排入溪流　\n②在溪邊大量種植外來植物\n③參加淨溪活動，把水中垃圾撿走　\n④在水中大量使用農藥除蟲", "ans": "③ 參加淨溪活動，把水中垃圾撿走", "explain": "淨溪可減少水域垃圾；直接排放廢水、任意種外來植物或大量使用農藥都可能破壞水域環境。", "page": "66～67", "image": "", "article": ""}, {"id": "check_0", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 1, "q": "小葵一家到山上露營，一路上看到以下這些情形。哪些做法「會」破壞地表環境？正確的請在□中打✓。\n□　在山坡地砍掉大片樹木來種菜\n□　在裸露的山坡地上種植物\n□　在河床上盜採砂石\n□　把露營產生的垃圾帶下山處理\n□　開挖大片山坡地蓋停車場", "ans": "應勾選：第 1、3、5 項", "explain": "砍伐大片樹木、盜採砂石和開挖山坡會破壞地表。裸露地種植物、把垃圾帶下山則是保護環境的做法。", "page": "21～22", "image": "", "article": ""}, {"id": "check_1", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 2, "q": "探險隊要出發去溪邊做水域調查。哪些是「正確」的準備或行為？正確的請在□中打✓。\n□　出發前先查看當天的氣象報告\n□　帶著水生生物圖鑑，幫助辨認看到的生物\n□　把採集到的魚全部帶回家飼養\n□　結伴同行，不單獨靠近深水的地方\n□　把觀察到的生物種類和數量記錄下來", "ans": "應勾選：第 1、2、4、5 項", "explain": "先查天氣、準備圖鑑、結伴注意安全，並記錄種類與數量。觀察時不要把魚全部帶回家，避免影響原有生態。", "page": "46～47", "image": "", "article": ""}, {"id": "check_2", "section": "check", "label": "三、勾選題", "color": "#d97706", "num": 3, "q": "為了讓水域環境保持乾淨、水生生物健康長大，哪些做法是「正確」的？正確的請在□中打✓。\n□　工廠的廢水先經過處理再排放\n□　在水域旁的農田大量噴灑農藥\n□　參加淨溪、淨灘等清理活動\n□　把家裡養不下的魚放到野外的溪流\n□　到河邊野餐後，把垃圾帶回家處理", "ans": "應勾選：第 1、3、5 項", "explain": "廢水先處理、參加清理活動、垃圾帶走，才能保護水域。大量農藥和任意放生都可能傷害水生生物。", "page": "66～67", "image": "", "article": ""}, {"id": "fill_0", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 1, "q": "（一）1．甲（布袋蓮）屬於哪一類水生植物？", "ans": "D（漂浮性）", "explain": "布袋蓮整株漂浮在水面，根懸在水中，屬於漂浮性。", "page": "48～49、52～53", "image": "image2.png", "article": ""}, {"id": "fill_1", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 2, "q": "（一）1．乙（水蘊草）屬於哪一類水生植物？", "ans": "A（沉水性）", "explain": "水蘊草的根固定在水底泥土，莖和葉沉在水中，屬於沉水性。", "page": "49、54～55", "image": "image2.png", "article": ""}, {"id": "fill_2", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 3, "q": "（一）1．丙（荷花）屬於哪一類水生植物？", "ans": "B（挺水性）", "explain": "荷花的根在水底泥土中，成熟葉片和花挺出水面，屬於挺水性。", "page": "51、57", "image": "image2.png", "article": ""}, {"id": "fill_3", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 4, "q": "（一）1．丁（睡蓮）屬於哪一類水生植物？", "ans": "C（浮葉性）", "explain": "睡蓮的根在水底泥土，葉片浮在水面，屬於浮葉性。", "page": "50、56", "image": "image2.png", "article": ""}, {"id": "fill_4", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 5, "q": "（一）2．甲的葉柄氣室可以儲存什麼？", "ans": "G（空氣）", "explain": "布袋蓮膨大的葉柄有儲存空氣的構造，有助於漂浮在水面。", "page": "52～53", "image": "image2.png", "article": ""}, {"id": "fill_5", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 6, "q": "（一）3．丁的葉子保持怎樣在水面上？", "ans": "H（平貼）", "explain": "睡蓮的葉柄可隨水位伸長或彎曲，讓葉片平貼水面，爭取陽光。", "page": "56", "image": "image2.png", "article": ""}, {"id": "fill_6", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 7, "q": "（二）4．魚的外形主要分成頭、＿＿和鰭三個部分。", "ans": "K（軀幹）", "explain": "依本課內容，魚的外形主要分為頭、軀幹和鰭。", "page": "59", "image": "image4.png", "article": ""}, {"id": "fill_7", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 8, "q": "（二）5．魚在水中主要利用＿＿來呼吸。", "ans": "F（鰓）", "explain": "水流經魚鰓，魚便能從水中獲得呼吸需要的氧氣。魚鰭主要幫助運動。", "page": "60", "image": "image4.png", "article": ""}, {"id": "fill_8", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 9, "q": "（二）6．魚的身體大多呈＿＿形，可以減少前進的阻力。", "ans": "I（流線）", "explain": "魚的身體中間較粗，頭、尾較細，呈流線形，有助於減少水的阻力。", "page": "59", "image": "image4.png", "article": ""}, {"id": "fill_9", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 10, "q": "（三）7．三種物質中，被流水搬運得最遠的是什麼？", "ans": "E（土壤）", "explain": "依本課實驗，顆粒越小越容易被搬遠；圖中的土壤顆粒最小。", "page": "19～20", "image": "image5.png", "article": ""}, {"id": "fill_10", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 11, "q": "（三）8．被搬運的物質最後會怎樣在下游？", "ans": "J（堆積）", "explain": "物質被流水搬運後，在其他地方停下來堆起，稱為堆積，會改變地表形貌。", "page": "19～20", "image": "image5.png", "article": ""}, {"id": "fill_11", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 12, "q": "（四）1．這次地震的芮氏規模是多少？", "ans": "7.1", "explain": "直接讀取本題地震報告的「芮氏規模：7.1」。規模表示地震釋放的能量大小。", "page": "25", "image": "image6.png", "article": ""}, {"id": "fill_12", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 13, "q": "（四）2．震央位在花蓮縣的哪個鄉鎮？", "ans": "壽豐鄉", "explain": "本題報告寫著「位在花蓮縣壽豐鄉」，所以填壽豐鄉。請讀本題圖片，不要抄課本另一份報告的地名。", "page": "25", "image": "image6.png", "article": ""}, {"id": "fill_13", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 14, "q": "（四）3．報告中最大震度為 6 強的地點是？", "ans": "花蓮縣和平", "explain": "本題報告「各地最大震度」的花蓮縣和平為 6 強，是表中最大的震度。", "page": "25～27", "image": "image6.png", "article": ""}, {"id": "fill_14", "section": "fill", "label": "四、看圖回答", "color": "#16a34a", "num": 15, "q": "（四）4．新北市的震度是多少級？", "ans": "5 弱（5 級弱）", "explain": "找到報告中的「新北市」，對應的震度是 5 弱。不要把這個地點的震度和整次地震的規模混在一起。", "page": "25～27", "image": "image6.png", "article": ""}, {"id": "reading_0", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 1, "q": "這次災害「最先」發生的原因是什麼？\n①火山爆發　②冰川崩落　③颱風登陸　④海水倒灌", "ans": "② 冰川崩落", "explain": "依文章順序，先是冰川斷裂崩落，再撞碎山壁、帶下土石，形成泥流。", "page": "18～20", "image": "", "article": "【冰川崩落，帶走一整條山谷】\n２０２６年８月２６日早上，在尼泊爾和西藏交界的高山上，一大塊寬約６００公尺的冰川突然斷裂，從５２００公尺高的地方往下墜落了將近１２００公尺。崩落的巨大冰塊撞碎了山壁，把大量的石頭、沙和泥土一起帶下山谷。當時正好是雨季，山谷裡的河水本來就很多，冰、水和土石混在一起，變成力量強大的泥流，沿著波特科西河一路往下衝。泥流經過的地方，房屋、道路和橋梁被沖毀，河道被土石填高，原本清澈的溪水變得又濁又黃。科學家到現場調查後說：「這裡看起來就像被炸過一樣，到處都是冰川留下來的堆積物。」這場災害造成很多人罹難。科學家也提醒，因為地球愈來愈熱，高山上的冰川融化得愈來愈快，冰層變得不穩定，這類災害可能會愈來愈多。要減少災害，除了在山坡地做好水土保持、不要在危險的河谷邊蓋房子，我們平時也要節約能源、愛護環境，一起讓地球慢一點變熱。\n"}, {"id": "reading_1", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 2, "q": "文中說「冰、水和土石混在一起，沿著河谷往下衝」，這最接近我們學過的哪一種現象？\n①土石流　②沙丘　③潟湖　④珊瑚白化", "ans": "① 土石流", "explain": "文中描述冰、水與土石混合，快速沿河谷下衝，最接近土石流。", "page": "18～22", "image": "", "article": "【冰川崩落，帶走一整條山谷】\n２０２６年８月２６日早上，在尼泊爾和西藏交界的高山上，一大塊寬約６００公尺的冰川突然斷裂，從５２００公尺高的地方往下墜落了將近１２００公尺。崩落的巨大冰塊撞碎了山壁，把大量的石頭、沙和泥土一起帶下山谷。當時正好是雨季，山谷裡的河水本來就很多，冰、水和土石混在一起，變成力量強大的泥流，沿著波特科西河一路往下衝。泥流經過的地方，房屋、道路和橋梁被沖毀，河道被土石填高，原本清澈的溪水變得又濁又黃。科學家到現場調查後說：「這裡看起來就像被炸過一樣，到處都是冰川留下來的堆積物。」這場災害造成很多人罹難。科學家也提醒，因為地球愈來愈熱，高山上的冰川融化得愈來愈快，冰層變得不穩定，這類災害可能會愈來愈多。要減少災害，除了在山坡地做好水土保持、不要在危險的河谷邊蓋房子，我們平時也要節約能源、愛護環境，一起讓地球慢一點變熱。\n"}, {"id": "reading_2", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 3, "q": "文中提到「河道被土石填高」，這和我們在土堆上澆水的實驗中，哪一種現象最相似？\n①水把物質沖走後留下凹槽　②被搬運的物質停下來堆積起來　\n③土堆完全沒有改變　      ④水滲進土裡不見了", "ans": "② 被搬運的物質停下來堆積起來", "explain": "「河道被土石填高」表示搬運來的物質在河道堆積，和土堆澆水後物質在別處堆起的情形相似。", "page": "19～20", "image": "", "article": "【冰川崩落，帶走一整條山谷】\n２０２６年８月２６日早上，在尼泊爾和西藏交界的高山上，一大塊寬約６００公尺的冰川突然斷裂，從５２００公尺高的地方往下墜落了將近１２００公尺。崩落的巨大冰塊撞碎了山壁，把大量的石頭、沙和泥土一起帶下山谷。當時正好是雨季，山谷裡的河水本來就很多，冰、水和土石混在一起，變成力量強大的泥流，沿著波特科西河一路往下衝。泥流經過的地方，房屋、道路和橋梁被沖毀，河道被土石填高，原本清澈的溪水變得又濁又黃。科學家到現場調查後說：「這裡看起來就像被炸過一樣，到處都是冰川留下來的堆積物。」這場災害造成很多人罹難。科學家也提醒，因為地球愈來愈熱，高山上的冰川融化得愈來愈快，冰層變得不穩定，這類災害可能會愈來愈多。要減少災害，除了在山坡地做好水土保持、不要在危險的河谷邊蓋房子，我們平時也要節約能源、愛護環境，一起讓地球慢一點變熱。\n"}, {"id": "reading_3", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 4, "q": "泥流衝過之後，原本住在這條河裡的水生生物最可能會怎麼樣？\n①完全不受影響　     ②棲息地被破壞、水又變混濁，難以生存　\n③會長得更快更健康　 ④會全部搬到高山上定居", "ans": "② 棲息地被破壞、水又變混濁，難以生存", "explain": "泥流可能破壞原有棲地並改變水質，使魚蝦等水生生物的生存受到影響。", "page": "66～67", "image": "", "article": "【冰川崩落，帶走一整條山谷】\n２０２６年８月２６日早上，在尼泊爾和西藏交界的高山上，一大塊寬約６００公尺的冰川突然斷裂，從５２００公尺高的地方往下墜落了將近１２００公尺。崩落的巨大冰塊撞碎了山壁，把大量的石頭、沙和泥土一起帶下山谷。當時正好是雨季，山谷裡的河水本來就很多，冰、水和土石混在一起，變成力量強大的泥流，沿著波特科西河一路往下衝。泥流經過的地方，房屋、道路和橋梁被沖毀，河道被土石填高，原本清澈的溪水變得又濁又黃。科學家到現場調查後說：「這裡看起來就像被炸過一樣，到處都是冰川留下來的堆積物。」這場災害造成很多人罹難。科學家也提醒，因為地球愈來愈熱，高山上的冰川融化得愈來愈快，冰層變得不穩定，這類災害可能會愈來愈多。要減少災害，除了在山坡地做好水土保持、不要在危險的河谷邊蓋房子，我們平時也要節約能源、愛護環境，一起讓地球慢一點變熱。\n"}, {"id": "reading_4", "section": "reading", "label": "五、閱讀素養", "color": "#db2777", "num": 5, "q": "看完這篇報導，請你寫兩個我們在生活中做得到、又能幫助地球的行動。 \n  ①                                                                                 \n②                                                                                 ", "ans": "參考：隨手關燈；自備水壺，減少一次性用品。", "explain": "這是開放題，寫兩項具體可做的行動即可，例如節約用電、搭大眾運輸、資源回收、愛惜食物或參加淨溪。每項 1 分；只有「愛護地球」「保護環境」等空泛語句，依解答卷兩項合計給 1 分。", "page": "22、66～67", "image": "", "article": "【冰川崩落，帶走一整條山谷】\n２０２６年８月２６日早上，在尼泊爾和西藏交界的高山上，一大塊寬約６００公尺的冰川突然斷裂，從５２００公尺高的地方往下墜落了將近１２００公尺。崩落的巨大冰塊撞碎了山壁，把大量的石頭、沙和泥土一起帶下山谷。當時正好是雨季，山谷裡的河水本來就很多，冰、水和土石混在一起，變成力量強大的泥流，沿著波特科西河一路往下衝。泥流經過的地方，房屋、道路和橋梁被沖毀，河道被土石填高，原本清澈的溪水變得又濁又黃。科學家到現場調查後說：「這裡看起來就像被炸過一樣，到處都是冰川留下來的堆積物。」這場災害造成很多人罹難。科學家也提醒，因為地球愈來愈熱，高山上的冰川融化得愈來愈快，冰層變得不穩定，這類災害可能會愈來愈多。要減少災害，除了在山坡地做好水土保持、不要在危險的河谷邊蓋房子，我們平時也要節約能源、愛護環境，一起讓地球慢一點變熱。\n"}];
 var SECS = [{"key": "tf", "label": "一、是非題", "color": "#6366f1", "count": 10}, {"key": "mc", "label": "二、選擇題", "color": "#0891b2", "count": 20}, {"key": "check", "label": "三、勾選題", "color": "#d97706", "count": 3}, {"key": "fill", "label": "四、看圖回答", "color": "#16a34a", "count": 15}, {"key": "reading", "label": "五、閱讀素養", "color": "#db2777", "count": 5}];
 var state = {};
 const STORE = 'kangxuan-115-midterm-1016-final';
-try { state = JSON.parse(localStorage.getItem(STORE) || '{}').state || {}; } catch(e) {}
-function saveState(){try{localStorage.setItem(STORE,JSON.stringify({state:state,name:document.getElementById('studentName').value}));}catch(e){document.getElementById('storageNote').textContent='這個瀏覽器無法儲存進度，離開前請輸出紀錄。';}}
+function saveState(){if(typeof saveDraft==='function')saveDraft();if(typeof identity!=='undefined'&&identity&&lastSubmission&&JSON.stringify(state)!==lastSubmission.states)note('標記已修改，請再次按「繳交訂正」更新給老師。');}
 var curId = null;
 
 function buildGrid() {
@@ -223,12 +228,13 @@ function openModal(id) {
   if (cur==='partial') document.getElementById('sPartial').className = 'sbtn partial sel-partial';
   if (cur==='no') document.getElementById('sNo').className = 'sbtn no sel-no';
 
-  if (!state[id]) {
+  if (!IS_TEACHER && !state[id]) {
     state[id] = 'seen';
     updateBubble(id);
     updateProgress();
   }
 
+  document.getElementById('studentStatusActions').hidden=IS_TEACHER;
   document.getElementById('overlay').className = 'overlay show';
   document.body.style.overflow = 'hidden';
   document.querySelector('.close-btn').focus();
@@ -238,7 +244,7 @@ function closeOverlay() {
   document.getElementById('overlay').className = 'overlay';
   document.body.style.overflow = '';
   const last=curId;curId = null;
-  if(last)document.getElementById('bbl_'+last).focus();
+  if(last&&!IS_TEACHER)document.getElementById('bbl_'+last).focus();
 }
 
 function overlayClick(e) {
@@ -256,7 +262,7 @@ function setStatus(s) {
   if (s==='ok') document.getElementById('sOk').className = 'sbtn ok sel-ok';
   if (s==='partial') document.getElementById('sPartial').className = 'sbtn partial sel-partial';
   if (s==='no') document.getElementById('sNo').className = 'sbtn no sel-no';
-  setTimeout(closeOverlay, 600);
+  closeOverlay();
 }
 
 function updateBubble(id) {
@@ -283,58 +289,9 @@ function updateProgress() {
 }
 
 function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function doExport() {
-  var name = document.getElementById('studentName').value || '（未填姓名）';
-  var now = new Date();
-  var ds = now.getFullYear() + '/' + (now.getMonth()+1) + '/' + now.getDate();
-  var ok=0,partial=0,no=0;
-  for (var k in state) {
-    if (state[k]==='ok') ok++;
-    else if (state[k]==='partial') partial++;
-    else if (state[k]==='no') no++;
-  }
-  document.getElementById('snapMeta').innerHTML =
-    '姓名：<strong>' + escapeHTML(name) + '</strong>　日期：' + ds + '<br>' +
-    '✅已熟練 ' + ok + ' 題　⚠️尚未熟練 ' + partial + ' 題　❓還是不懂 ' + no + ' 題';
-
-  var content = document.getElementById('snapContent');
-  content.innerHTML = '';
-  SECS.forEach(function(sec) {
-    var qs = QS.filter(function(q){ return q.section===sec.key; });
-    var div = document.createElement('div');
-    div.className = 'snap-sec';
-    var title = document.createElement('div');
-    title.className = 'snap-sec-title';
-    title.style.color = sec.color;
-    title.textContent = sec.label;
-    div.appendChild(title);
-    var row = document.createElement('div');
-    row.className = 'snap-bubbles';
-    qs.forEach(function(q) {
-      var s = state[q.id] || 'default';
-      var b = document.createElement('div');
-      b.className = 'snap-bbl sn-' + s;
-      b.textContent = q.num;
-      row.appendChild(b);
-    });
-    div.appendChild(row);
-    content.appendChild(div);
-  });
-
-  document.getElementById('snapshot').style.display = 'block';
-  setTimeout(function() {
-    document.getElementById('snapshot').scrollIntoView({behavior:'smooth'});
-    document.getElementById('exportHint').hidden=false;
-  }, 200);
-}
-
-window.onload = function() {
-  try{document.getElementById('studentName').value=JSON.parse(localStorage.getItem(STORE)||'{}').name||'';}catch(e){}
-  buildGrid();
-  QS.forEach(q=>updateBubble(q.id)); updateProgress();
-  document.getElementById('studentName').addEventListener('input',saveState);
-};
+window.onload = function(){buildGrid();if(IS_TEACHER)teacherInit();else studentInit();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOverlay();if(e.key==='Tab'&&document.getElementById('overlay').classList.contains('show')){const nodes=[...document.querySelectorAll('.modal button')];const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 </script>
+<script src="config.js"></script><script src="monitor-core.js"></script><script src="online.js"></script>
 </body>
 </html>

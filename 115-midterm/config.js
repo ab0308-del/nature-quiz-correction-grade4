@@ -1,0 +1,1 @@
+window.CORRECTION_CONFIG={"url":"https://demckofqselwofbpdztn.supabase.co","key":"sb_publishable_jamazPie84oUOPxbTNnGBw_0idzLeex","endpoint":"https://demckofqselwofbpdztn.supabase.co/functions/v1/nature-correction"};
