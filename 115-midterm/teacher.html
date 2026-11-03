@@ -1,1 +1,48 @@
-<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教師後台</title><p><a href="index.html?teacher=1">進入教師後台</a></p><script>const u=new URL('index.html',location.href);u.searchParams.set('teacher','1');const cls=new URLSearchParams(location.search).get('class');if(cls)u.searchParams.set('class',cls);location.replace(u);</script></html>
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>教師後台・帳號與密碼</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f0f4ff;color:#18315b;font-family:"Microsoft JhengHei",sans-serif;line-height:1.7}main{max-width:600px;margin:48px auto;padding:24px}section{background:white;border-radius:18px;padding:28px;box-shadow:0 8px 30px #18315b12}h1{margin-top:0}label{display:block;margin-top:16px}input,button,a.button{font:inherit;border-radius:9px;padding:12px;width:100%}input{border:1px solid #b8c7de}button,a.button{display:block;margin-top:16px;border:0;background:#244ba5;color:white;text-align:center;text-decoration:none;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.secondary{background:#e8efff!important;color:#18315b!important}#notice{white-space:pre-wrap;background:#e5f3ff;padding:14px;border-radius:9px;margin-top:16px}.error{background:#fff0f0!important;color:#982424}small{display:block;margin-top:16px;color:#52637c}[hidden]{display:none!important}a{color:#244ba5}</style></head>
+<body><main><section><h1>教師後台</h1>
+<div id="entry"><p>已有密碼可直接登入。忘記密碼或更換電腦後，可以用教師信箱重新設定。</p>
+<a class="button" href="index.html?teacher=1">使用原帳號登入後台</a>
+<form id="recoverForm"><h2>忘記密碼／重新設定</h2><label for="email">教師 Email</label><input id="email" type="email" autocomplete="email" required placeholder="請輸入原本的教師信箱"><button id="send" type="submit">寄送重設密碼信件</button></form>
+<small>請使用原本獲授權的教師信箱。重設密碼不會刪除班級與學生紀錄。若尚未註冊，請前往登入頁選「首次使用：註冊教師帳號」。</small></div>
+<form id="passwordForm" hidden><h2>設定新的登入密碼</h2><label for="password">新密碼（至少 8 碼）</label><input id="password" type="password" autocomplete="new-password" minlength="8" required><label for="confirm">再次輸入新密碼</label><input id="confirm" type="password" autocomplete="new-password" minlength="8" required><button id="save" type="submit">儲存新密碼</button></form>
+<div id="notice" role="status" aria-live="polite" hidden></div><p><a href="index.html">返回學生訂正頁</a></p></section></main>
+<script src="config.js"></script><script>
+const cfg=window.CORRECTION_CONFIG,$=id=>document.getElementById(id);
+let recoveryToken=null;
+function notice(text,error=false){$('notice').hidden=false;$('notice').textContent=text;$('notice').className=error?'error':'';}
+async function auth(path,body,token){
+ const response=await fetch(cfg.url+'/auth/v1/'+path,{method:token?'PUT':'POST',headers:{apikey:cfg.key,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(body),signal:AbortSignal.timeout(20000)});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.msg||data.message||data.error_description||'操作未完成，請稍後重試。');
+ return data;
+}
+$('recoverForm').onsubmit=async event=>{
+ event.preventDefault();$('send').disabled=true;notice('正在寄送重設密碼信件……');
+ const redirect=new URL('teacher.html',location.href);redirect.search='';redirect.hash='';
+ try{await auth('recover?redirect_to='+encodeURIComponent(redirect.href),{email:$('email').value.trim()});notice('已送出申請。如果這個信箱已註冊，會收到重設密碼信件。請查看收件匣與垃圾郵件，並使用最新一封信的連結。');}
+ catch(error){notice('寄送未完成：'+error.message,true);}
+ finally{$('send').disabled=false;}
+};
+$('passwordForm').onsubmit=async event=>{
+ event.preventDefault();const password=$('password').value;
+ if(password!==$('confirm').value){notice('兩次輸入的密碼不同，請重新確認。',true);return;}
+ if(!recoveryToken){notice('重設連結無效，請重新寄送信件。',true);return;}
+ $('save').disabled=true;
+ try{await auth('user',{password},recoveryToken);recoveryToken=null;sessionStorage.removeItem('nature115-teacher');$('passwordForm').reset();$('passwordForm').hidden=true;$('entry').hidden=false;notice('新密碼已儲存。請按「使用原帳號登入後台」，使用教師 Email 與新密碼登入。');}
+ catch(error){notice('密碼未更新：'+error.message+' 若連結已過期，請重新開啟教師入口寄送信件。',true);}
+ finally{$('save').disabled=false;}
+};
+(function(){
+ const fragment=new URLSearchParams(location.hash.slice(1));
+ const error=fragment.get('error_description');
+ const token=fragment.get('access_token');
+ const type=fragment.get('type');
+ if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+ if(error){notice('重設連結無法使用，請重新寄送信件。',true);return;}
+ if(type==='recovery'&&token){recoveryToken=token;$('entry').hidden=true;$('passwordForm').hidden=false;notice('請設定新密碼。完成前請勿重新整理或關閉此頁。');}
+ else if(token){notice('信箱驗證連結已開啟，請回登入頁使用教師帳號登入。');}
+})();
+</script></body></html>
