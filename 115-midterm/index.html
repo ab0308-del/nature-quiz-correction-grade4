@@ -102,12 +102,12 @@ body{font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif;background:var(-
 <p id="onlineNotice" class="notice" role="status" aria-live="polite">正在連接繳交系統……</p>
 <div id="studentWork" hidden>
 <div class="prog-wrap">
-  <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
-  <div class="prog-label" id="progLabel">已標記 0 / 53 題</div>
+  <div class="prog-bar" hidden><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-label" id="progLabel">已標記 0 題（只需訂正錯題）</div>
 </div>
 
-<p class="help">先在紙本完成訂正，再點選題號看解說，標記你現在的熟練程度。<br>康軒版・頁碼依提供的教學指引內嵌課本頁碼。<br>看圖題依原卷小題順序分成 15 格；勾選題每組一個訂正按鈕。</p><p class="help" id="storageNote">進度會保留在這個瀏覽器；完成標記後，請按「繳交訂正」讓老師收到。</p><div class="legend">灰色：未開啟／已看過　綠色 ✓：已熟練　橘色 !：尚未熟練　紅色 ?：還是不懂</div><div class="container" id="mainGrid"></div></div>
-<div class="tools" id="studentTools"><p>每個項目都要選一種熟練程度；還不懂的題目可以標紅色再繳交。</p></div>
+<p class="help">只需在紙本完成答錯題目的訂正，再點選這些題號看解說，標記你現在的熟練程度；其他題目不用標記。<br>康軒版・頁碼依提供的教學指引內嵌課本頁碼。<br>看圖題依原卷小題順序分成 15 格；勾選題每組一個訂正按鈕。</p><p class="help" id="storageNote">進度會保留在這個瀏覽器；完成標記後，請按「繳交訂正」讓老師收到。</p><div class="legend">灰色：未開啟／已看過　綠色 ✓：已熟練　橘色 !：尚未熟練　紅色 ?：還是不懂</div><div class="container" id="mainGrid"></div></div>
+<div class="tools" id="studentTools"><p>只需訂正答錯的題目並選擇熟練程度，其他題目不用標記。還不懂的題目可標紅色後繳交；沒有錯題也可以直接繳交。</p></div>
 <section id="teacherView" hidden>
  <header class="teacher-heading"><div><p class="eyebrow">康軒版・四上自然期中考</p><h1>訂正繳交監控</h1><p>依班級掌握繳交情況，找出需要一起講解的題目。</p></div><a href="index.html">返回學生訂正頁</a></header>
  <p id="teacherNotice" class="notice" role="status" aria-live="polite">請使用已授權的教師帳號登入。</p>
@@ -155,7 +155,7 @@ var QS = [{"id": "tf_0", "section": "tf", "label": "一、是非題", "color": "
 var SECS = [{"key": "tf", "label": "一、是非題", "color": "#6366f1", "count": 10}, {"key": "mc", "label": "二、選擇題", "color": "#0891b2", "count": 20}, {"key": "check", "label": "三、勾選題", "color": "#d97706", "count": 3}, {"key": "fill", "label": "四、看圖回答", "color": "#16a34a", "count": 15}, {"key": "reading", "label": "五、閱讀素養", "color": "#db2777", "count": 5}];
 var state = {};
 const STORE = 'kangxuan-115-midterm-1016-final';
-function saveState(){if(typeof saveDraft==='function')saveDraft();if(typeof identity!=='undefined'&&identity&&lastSubmission&&JSON.stringify(state)!==lastSubmission.states)note('標記已修改，請再次按「繳交訂正」更新給老師。');}
+function saveState(){if(typeof saveDraft==='function')saveDraft();if(typeof identity!=='undefined'&&identity&&lastSubmission&&JSON.stringify(Object.fromEntries(Object.entries(state).filter(([id,status])=>QS.some(q=>q.id===id)&&['ok','partial','no'].includes(status))))!==lastSubmission.states)note('標記已修改，請再次按「繳交訂正」更新給老師。');}
 var curId = null;
 
 function buildGrid() {
@@ -285,7 +285,7 @@ function updateProgress() {
   var total = QS.length;
   var pct = Math.round(rated/total*100);
   document.getElementById('progFill').style.width = pct + '%';
-  document.getElementById('progLabel').textContent = '已標記 ' + rated + ' / ' + total + ' 題';saveState();
+  document.getElementById('progLabel').textContent = '已標記 ' + rated + ' 題（只需訂正錯題）';saveState();
 }
 
 function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
