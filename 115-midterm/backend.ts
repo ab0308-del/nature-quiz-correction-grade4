@@ -31,7 +31,7 @@ Deno.serve(async req=>{
    const text=await req.text();if(text.length>12000)throw new ApiError(413,'資料過大。');const b=JSON.parse(text);
    const cls=String(b.class_name||'').trim(), name=String(b.student_name||'').trim(),seat=Number(b.seat),token=String(b.owner_token||'');
    if(cls.length<1||cls.length>20||name.length<1||name.length>30||!Number.isInteger(seat)||seat<1||seat>99||!/^[a-f0-9]{64}$/.test(token))throw new ApiError(400,'請完整填寫班級、座號與姓名。');
-   if(!b.states||Array.isArray(b.states)||Object.keys(b.states).length!==IDS.length||IDS.some(id=>!['ok','partial','no'].includes(b.states[id])))throw new ApiError(400,'請先為全部 53 個項目標記熟練程度；還不懂的題目可以標紅色。');
+   if(!b.states||typeof b.states!=='object'||Array.isArray(b.states)||Object.entries(b.states).some(([id,status])=>!IDS.includes(id)||!['ok','partial','no'].includes(status as string)))throw new ApiError(400,'訂正標記格式不正確，請重新載入頁面後再繳交。');
    const classes=await db(`nature_correction_classes?active=eq.true&class_name=eq.${encodeURIComponent(cls)}&select=seats`);
    if(!classes.length||!classes[0].seats.includes(seat))throw new ApiError(400,'班級或座號尚未開放，請向老師確認。');
    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token));const owner_hash=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join('');
