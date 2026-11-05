@@ -292,6 +292,6 @@ function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 window.onload = function(){buildGrid();if(IS_TEACHER)teacherInit();else studentInit();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOverlay();if(e.key==='Tab'&&document.getElementById('overlay').classList.contains('show')){const nodes=[...document.querySelectorAll('.modal button')];const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 </script>
-<script src="config.js"></script><script src="monitor-core.js"></script><script src="online.js"></script>
+<script src="config.js"></script><script src="monitor-core.js?v=20261105-partial-1"></script><script src="online.js?v=20261105-partial-1"></script>
 </body>
 </html>
