@@ -21,12 +21,14 @@ function startStudent(){
  identity={class_name:cls,seat,student_name:name,owner_token:token};state=saved?.states||{};lastSubmission=saved?.lastSubmission||null;
  for(const id of ['studentClass','studentSeat','studentName'])$(id).disabled=true;
  $('reloadClasses').disabled=true;$('startStudent').hidden=true;$('switchStudent').hidden=false;$('studentWork').hidden=false;$('submitWork').disabled=false;
- renderBubbles();note(lastSubmission?'已載入本機紀錄。若有修改，請再按一次「繳交訂正」。':'已開始訂正。每題都可標記綠、橘或紅；還不懂的題目請標紅色。');saveDraft();
+ renderBubbles();note(lastSubmission?'已載入本機紀錄。若有修改，請再按一次「繳交訂正」。':'只需訂正答錯的題目，並標記綠、橘或紅；其他題目不用標記，就能繳交。');saveDraft();
 }
 function switchStudent(){saveDraft();identity=null;state={};lastSubmission=null;for(const id of ['studentClass','studentSeat','studentName'])$(id).disabled=false;$('studentName').value='';$('studentSeat').value='';$('reloadClasses').disabled=false;$('startStudent').hidden=false;$('switchStudent').hidden=true;$('studentWork').hidden=true;$('submitWork').disabled=true;note('已保留上一位學生的本機進度，請輸入下一位學生資料。');}
 async function submitWork(){
- if(!identity)return;const count=CorrectionMonitor.ratedCount(state);if(count!==QS.length){note('還有 '+(QS.length-count)+' 個項目未標記。還不懂也可以選紅色，再一起繳交。',true);return;}
- $('submitWork').disabled=true;const snap=JSON.parse(JSON.stringify(state));note('正在繳交，請稍候……');
+ if(!identity)return;
+ const rated=Object.fromEntries(Object.entries(state).filter(([id,status])=>QS.some(q=>q.id===id)&&['ok','partial','no'].includes(status)));
+ if(!Object.keys(rated).length&&!window.confirm('目前沒有標記任何訂正題目。若這次沒有答錯的題目，可以直接繳交；確定要繳交嗎？'))return;
+ $('submitWork').disabled=true;const snap=rated;note('正在繳交，請稍候……');
  try{const data=await api('submit',{...identity,states:snap});lastSubmission={time:data.submitted_at,states:JSON.stringify(snap)};saveDraft();note('已成功繳交給老師，時間：'+new Date(data.submitted_at).toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})+'。之後修改標記，請再次繳交。');}
  catch(e){note(e.message||'網路暫時中斷，尚未繳交成功，進度仍保留在這個瀏覽器。',true);}finally{$('submitWork').disabled=false;}
 }
